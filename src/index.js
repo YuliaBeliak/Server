@@ -9,7 +9,6 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 app.get('/', storageService.showAllUsers);
 
-
 app.route('/users')
     .get(storageService.showUser)
     .post(storageService.addUser)
