@@ -1,6 +1,12 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const router = require('./routers/user');
+const mongoose = require('mongoose');
+
+mongoose.connect('mongodb://localhost:27017/myAPI', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+}).catch(err => console.log(err));
 
 const app = express();
 

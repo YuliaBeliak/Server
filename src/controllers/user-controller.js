@@ -4,45 +4,45 @@ class UserController {
     constructor() {
     }
 
-    getUsers(req, res) {
+    getUsers = async (req, res) => {
         try {
-            const result = service.show();
+            const result = await service.show();
             res.status(200).send(result);
         } catch (err) {
             res.status(400).send({error: err.message});
         }
     }
 
-    addUser(req, res) {
+    addUser = async (req, res) => {
         try {
-            const result = service.add(req.body);
+            const result = await service.add(req.body);
             res.status(200).send(result);
         } catch (err) {
             res.status(400).send({error: err.message});
         }
     }
 
-    getUser(req, res) {
+    getUser = async (req, res) => {
         try {
-            const result = service.get(req.params.id);
+            const result = await service.get(req.params.id);
             res.status(200).send(result);
         } catch (err) {
             res.status(400).send({error: err.message});
         }
     }
 
-    updateUser(req, res) {
+    updateUser = async (req, res) => {
         try {
-            const result = service.update(req.params.id, req.body);
+            const result = await service.update(req.params.id, req.body);
             res.status(200).send(result);
         } catch (err) {
             res.status(400).send({error: err.message});
         }
     }
 
-    removeUser(req, res) {
+    removeUser = async (req, res) => {
         try {
-            const result = service.remove(req.params.id);
+            const result = await service.remove(req.params.id);
             res.status(200).send(result);
         } catch (err) {
             res.status(400).send({error: err.message});

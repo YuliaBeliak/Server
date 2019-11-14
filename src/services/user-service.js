@@ -1,68 +1,27 @@
-const fs = require('fs');
-const path = require('path');
+const User = require('../models/user-model');
 
-const pathToStorage = path.join(__dirname, '../storage/user.json');
-const storage = JSON.parse(fs.readFileSync(pathToStorage));
-
-const updateStorage = () => {
-    fs.writeFile(pathToStorage, JSON.stringify(storage, null, 2), (err) => {
-        if (err) return;
-    });
+const show = async () => {
+    return await User.find({});
 };
 
-const generateId = () => `f${(~~(Math.random() * 1e8)).toString(16)}`;
-
-const show = () => {
-    return storage.map(el => `${el.firstName} ${el.lastName}`);
+const add = async body => {
+    const user = new User(body);
+    await user.save();
+    return `New ${user} has been added`;
 };
 
-const add = body => {
-    if (!body.firstName || !body.lastName) {
-        throw new Error('Incorrect data, json should contain "firstName" and "lastName" fields');
-    } else {
-        const newUser = {
-            firstName: body.firstName,
-            lastName: body.lastName,
-            id: generateId()
-        };
-        storage.push(newUser);
-        updateStorage();
-        return `New user ${newUser.firstName} ${newUser.lastName} has been added`;
-    }
+const get = async id => {
+    return await User.findById(id);
 };
 
-const get = id => {
-    const user = storage.find(el => el.id === id);
-    if (user) {
-        return user;
-    } else {
-        throw new Error('User not found');
-    }
+const update = async (id, body) => {
+    await User.findByIdAndUpdate(id, body);
+    return 'User has been updated';
 };
 
-const update = (id, body) => {
-    if (!body.firstName && !body.lastName) {
-        throw new Error('Nothing to update');
-    }
-    const idx = storage.findIndex(el => el.id === id);
-    if (idx >= 0) {
-        storage[idx] = {...storage[idx], ...body};
-        updateStorage();
-        return 'User data has been updated';
-    } else {
-        throw new Error('User not found');
-    }
-};
-
-const remove = id => {
-    const idx = storage.findIndex(el => el.id === id);
-    if (idx >= 0) {
-        storage.splice(idx, 1);
-        updateStorage();
-        return ('User has been removed');
-    } else {
-        throw new Error('User not found');
-    }
+const remove = async id => {
+    await User.findByIdAndDelete(id);
+    return 'User has been removed';
 };
 
 module.exports = {
