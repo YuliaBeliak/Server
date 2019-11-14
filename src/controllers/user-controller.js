@@ -6,7 +6,7 @@ class UserController {
 
     getUsers = async (req, res) => {
         try {
-            const result = await service.show();
+            const result = await service.getAll();
             res.status(200).send(result);
         } catch (err) {
             res.status(400).send({error: err.message});

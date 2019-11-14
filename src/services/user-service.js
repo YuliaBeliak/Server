@@ -1,13 +1,13 @@
 const User = require('../models/user-model');
 
-const show = async () => {
+const getAll = async () => {
     return await User.find({});
 };
 
 const add = async body => {
     const user = new User(body);
     await user.save();
-    return `New ${user} has been added`;
+    return `New user ${user} has been added`;
 };
 
 const get = async id => {
@@ -29,5 +29,5 @@ module.exports = {
     get,
     update,
     remove,
-    show
+    getAll
 };

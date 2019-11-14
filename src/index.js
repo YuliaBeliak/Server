@@ -6,6 +6,8 @@ const mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost:27017/myAPI', {
     useNewUrlParser: true,
     useUnifiedTopology: true,
+    useFindAndModify: false,
+    useCreateIndex: true
 }).catch(err => console.log(err));
 
 const app = express();
