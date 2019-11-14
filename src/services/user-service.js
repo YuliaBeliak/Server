@@ -15,8 +15,8 @@ const get = async id => {
 };
 
 const update = async (id, body) => {
-    await User.findByIdAndUpdate(id, body);
-    return 'User has been updated';
+    await User.findByIdAndUpdate(id, body, { runValidators: true });
+    return `Updated to ${await User.findById(id)}`;
 };
 
 const remove = async id => {
