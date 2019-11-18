@@ -8,7 +8,7 @@ mongoose.connect('mongodb://localhost:27017/myAPI', {
     useUnifiedTopology: true,
     useFindAndModify: false,
     useCreateIndex: true
-}).catch(err => console.log(err));
+});
 
 const app = express();
 

@@ -4,30 +4,27 @@ const getAll = async () => {
     return await User.find({});
 };
 
-const add = async body => {
-    const user = new User(body);
-    await user.save();
-    return `New user ${user} has been added`;
-};
-
 const get = async id => {
     return await User.findById(id);
 };
 
+const add = async body => {
+    const user = new User(body);
+    return await user.save();
+};
+
 const update = async (id, body) => {
-    await User.findByIdAndUpdate(id, body, { runValidators: true });
-    return `Updated to ${await User.findById(id)}`;
+    return await User.findByIdAndUpdate(id, body, {runValidators: true});
 };
 
 const remove = async id => {
-    await User.findByIdAndDelete(id);
-    return 'User has been removed';
+    return await User.findByIdAndDelete(id);
 };
 
 module.exports = {
+    getAll,
     add,
     get,
     update,
-    remove,
-    getAll
+    remove
 };

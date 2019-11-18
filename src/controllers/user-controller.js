@@ -16,7 +16,7 @@ class UserController {
     addUser = async (req, res) => {
         try {
             const result = await service.add(req.body);
-            res.status(200).send(result);
+            res.status(201).send(result);
         } catch (err) {
             res.status(400).send({error: err.message});
         }
