@@ -1,11 +1,55 @@
 const User = require('../models/user-model');
+const ObjectId = require('mongodb').ObjectID;
 
 const getAll = async () => {
-    return await User.find({});
+    const result = await User.aggregate([
+        {
+            $lookup: {
+                from: 'cities',
+                localField: 'city',
+                foreignField: '_id',
+                as: 'city'
+            }
+        },
+        {
+            $unwind: '$city'
+        },
+        {
+            $project: {
+                firstName: '$firstName',
+                lastName: '$lastName',
+                city: '$city.title'
+            }
+        }
+    ]);
+    return result
 };
 
 const get = async id => {
-    return await User.findById(id);
+    const result = await User.aggregate([
+        {
+            $match: {_id: ObjectId(id)}
+        },
+        {
+            $lookup: {
+                from: 'cities',
+                localField: 'city',
+                foreignField: '_id',
+                as: 'city'
+            }
+        },
+        {
+            $unwind: '$city'
+        },
+        {
+            $project: {
+                firstName: '$firstName',
+                lastName: '$lastName',
+                city: '$city.title'
+            }
+        }
+    ]);
+    return result
 };
 
 const add = async body => {
@@ -23,8 +67,8 @@ const remove = async id => {
 
 module.exports = {
     getAll,
-    add,
     get,
+    add,
     update,
     remove
 };

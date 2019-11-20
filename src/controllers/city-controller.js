@@ -1,10 +1,10 @@
-const service = require('../services/user-service');
+const service = require('../services/city-service');
 
-class UserController {
+class CityController {
     constructor() {
     }
 
-    getUsers = async (req, res) => {
+    getCities = async (req, res) => {
         try {
             const result = await service.getAll();
             res.status(200).send(result);
@@ -13,7 +13,7 @@ class UserController {
         }
     }
 
-    getUser = async (req, res) => {
+    getCity = async (req, res) => {
         try {
             const result = await service.get(req.params.id);
             res.status(200).send(result);
@@ -22,7 +22,7 @@ class UserController {
         }
     }
 
-    addUser = async (req, res) => {
+    addCity = async (req, res) => {
         try {
             const result = await service.add(req.body);
             res.status(201).send(result);
@@ -31,7 +31,7 @@ class UserController {
         }
     }
 
-    updateUser = async (req, res) => {
+    updateCity = async (req, res) => {
         try {
             const result = await service.update(req.params.id, req.body);
             res.status(200).send(result);
@@ -40,7 +40,7 @@ class UserController {
         }
     }
 
-    removeUser = async (req, res) => {
+    removeCity = async (req, res) => {
         try {
             const result = await service.remove(req.params.id);
             res.status(200).send(result);
@@ -50,5 +50,4 @@ class UserController {
     }
 }
 
-module.exports = UserController;
-
+module.exports = CityController;

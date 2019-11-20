@@ -15,6 +15,10 @@ const userScheme = new mongoose.Schema({
         minlength: 2,
         required: true
     },
+    city: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true
+    }
 });
 
 const User = mongoose.model('User', userScheme);
