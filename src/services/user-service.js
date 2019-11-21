@@ -1,4 +1,4 @@
-const User = require('../models/user-model');
+const {User, validationScheme} = require('../models/user-model');
 const ObjectId = require('mongodb').ObjectID;
 
 const getAll = async () => {
@@ -10,9 +10,6 @@ const getAll = async () => {
                 foreignField: '_id',
                 as: 'city'
             }
-        },
-        {
-            $unwind: '$city'
         },
         {
             $project: {
@@ -39,9 +36,6 @@ const get = async id => {
             }
         },
         {
-            $unwind: '$city'
-        },
-        {
             $project: {
                 firstName: '$firstName',
                 lastName: '$lastName',
@@ -53,8 +47,14 @@ const get = async id => {
 };
 
 const add = async body => {
-    const user = new User(body);
-    return await user.save();
+    try {
+        await validationScheme.validateAsync(body);
+        const user = new User(body);
+        return await user.save();
+    }
+    catch (err) {
+        return err;
+    }
 };
 
 const update = async (id, body) => {
