@@ -3,8 +3,9 @@ const bodyParser = require('body-parser');
 const userRouter = require('./routers/user');
 const cityRouter = require('./routers/city');
 const mongoose = require('mongoose');
+const {PORT, mongoUri} = require('../config/app');
 
-mongoose.connect('mongodb://localhost:27017/myAPI', {
+mongoose.connect(mongoUri, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useFindAndModify: false,
@@ -18,4 +19,4 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use('/users', userRouter);
 app.use('/cities', cityRouter);
 
-app.listen('3000', () => console.log('Server is running on port 3000'));
+app.listen(PORT, () => console.log('Server is running on port 3000'));

@@ -15,6 +15,17 @@ const userScheme = new mongoose.Schema({
         minlength: 2,
         required: true
     },
+    login: {
+        type: String,
+        trim: true,
+        unique: true,
+        minlength: 5,
+        required: true
+    },
+    password: {
+        type: String,
+        required: true
+    },
     city: {
         type: mongoose.Schema.Types.ObjectId,
         required: true

@@ -1,8 +1,25 @@
 const User = require('../models/user-model');
+const bCrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 const ObjectId = require('mongodb').ObjectID;
+const {jwtSecret} =require('../../config/app');
+
+const login = async body => {
+    const user = await User.findOne({login: body.login});
+    if (!user) {
+        throw new Error('User not found')
+    }
+    const isValid = await bCrypt.compare(body.password, user.password);
+
+    if (!isValid) {
+        throw new Error('Wrong password')
+    }
+    const token = jwt.sign(user._id.toString(), jwtSecret);
+    return {token};
+};
 
 const getAll = async () => {
-    const result = await User.aggregate([
+    return await User.aggregate([
         {
             $lookup: {
                 from: 'cities',
@@ -15,15 +32,16 @@ const getAll = async () => {
             $project: {
                 firstName: '$firstName',
                 lastName: '$lastName',
+                login: '$login',
+                password: '$password',
                 city: '$city.title'
             }
         }
     ]);
-    return result
 };
 
 const get = async id => {
-    const result = await User.aggregate([
+    return await User.aggregate([
         {
             $match: {_id: ObjectId(id)}
         },
@@ -39,14 +57,16 @@ const get = async id => {
             $project: {
                 firstName: '$firstName',
                 lastName: '$lastName',
+                login: '$login',
+                password: '$password',
                 city: '$city.title'
             }
         }
     ]);
-    return result
 };
 
 const add = async body => {
+    body.password = bCrypt.hashSync(body.password, 10);
     const user = new User(body);
     return await user.save();
 };
@@ -64,5 +84,6 @@ module.exports = {
     get,
     add,
     update,
-    remove
+    remove,
+    login
 };
