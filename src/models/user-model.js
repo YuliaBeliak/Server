@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const Joi = require('@hapi/joi');
 
 const userScheme = new mongoose.Schema({
     firstName: {
@@ -22,15 +21,6 @@ const userScheme = new mongoose.Schema({
     }
 });
 
-const validationScheme = Joi.object({
-    firstName: Joi.string().pattern(/^[a-z]+$/i).min(2).max(30).trim().required(),
-    lastName: Joi.string().pattern(/^[a-z]+$/i).min(2).max(30).trim().required(),
-    city: Joi.string().trim().required()
-});
-
 const User = mongoose.model('User', userScheme);
 
-module.exports = {
-    User,
-    validationScheme
-};
+module.exports = User;

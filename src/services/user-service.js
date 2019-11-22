@@ -1,4 +1,4 @@
-const {User, validationScheme} = require('../models/user-model');
+const User = require('../models/user-model');
 const ObjectId = require('mongodb').ObjectID;
 
 const getAll = async () => {
@@ -47,14 +47,8 @@ const get = async id => {
 };
 
 const add = async body => {
-    try {
-        await validationScheme.validateAsync(body);
-        const user = new User(body);
-        return await user.save();
-    }
-    catch (err) {
-        return err;
-    }
+    const user = new User(body);
+    return await user.save();
 };
 
 const update = async (id, body) => {
