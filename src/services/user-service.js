@@ -2,7 +2,7 @@ const User = require('../models/user-model');
 const bCrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const ObjectId = require('mongodb').ObjectID;
-const {jwtSecret} =require('../../config/app');
+const {access, refresh} = require('../../config/app').jwt;
 
 const login = async body => {
     const user = await User.findOne({login: body.login});
@@ -14,8 +14,30 @@ const login = async body => {
     if (!isValid) {
         throw new Error('Wrong password')
     }
-    const token = jwt.sign(user._id.toString(), jwtSecret);
-    return {token};
+
+    const accessToken = await generateAccessToken(user._id);
+    const refreshToken = await user.generateRefreshToken();
+
+    return {
+        accessToken,
+        refreshToken
+    };
+};
+
+const generateAccessToken = async id => {
+    try {
+        return await jwt.sign({_id: id}, access.key, {expiresIn: access.expiresIn});
+    } catch (e) {
+        throw new Error({error: e.message});
+    }
+};
+
+const getToken = async body => {
+    const refreshToken = body.token;
+    const payload = await jwt.verify(refreshToken, refresh.key);
+    const {_id} = payload;
+    const accessToken = await generateAccessToken(_id);
+    return {accessToken};
 };
 
 const getAll = async () => {
@@ -41,6 +63,10 @@ const getAll = async () => {
 };
 
 const get = async id => {
+    const user  = await User.findById(id);
+    if (user === null) {
+        throw new Error('User not found');
+    }
     return await User.aggregate([
         {
             $match: {_id: ObjectId(id)}
@@ -72,11 +98,22 @@ const add = async body => {
 };
 
 const update = async (id, body) => {
-    return await User.findByIdAndUpdate(id, body, {runValidators: true});
+    if (body.password) {
+        body.password = bCrypt.hashSync(body.password, 10);
+    }
+    const result = await User.findByIdAndUpdate(id, body, {new: true, runValidators: true});
+    if (result === null) {
+        throw new Error('User not found');
+    }
+    return result;
 };
 
 const remove = async id => {
-    return await User.findByIdAndDelete(id);
+    let result = await User.findByIdAndDelete(id);
+    if (result === null) {
+        throw new Error('User not found');
+    }
+    return result;
 };
 
 module.exports = {
@@ -85,5 +122,6 @@ module.exports = {
     add,
     update,
     remove,
-    login
+    login,
+    getToken
 };

@@ -11,16 +11,16 @@ class CityController {
         } catch (err) {
             res.status(400).send({error: err.message});
         }
-    }
+    };
 
     getCity = async (req, res) => {
         try {
             const result = await service.get(req.params.id);
             res.status(200).send(result);
         } catch (err) {
-            res.status(400).send({error: err.message});
+            res.status(404).send({error: err.message});
         }
-    }
+    };
 
     addCity = async (req, res) => {
         try {
@@ -29,7 +29,7 @@ class CityController {
         } catch (err) {
             res.status(400).send({error: err.message});
         }
-    }
+    };
 
     updateCity = async (req, res) => {
         try {
@@ -38,7 +38,7 @@ class CityController {
         } catch (err) {
             res.status(400).send({error: err.message});
         }
-    }
+    };
 
     removeCity = async (req, res) => {
         try {

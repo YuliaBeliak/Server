@@ -2,11 +2,24 @@ const City = require('../models/city-model');
 const ObjectId = require('mongodb').ObjectID;
 
 const getAll = async () => {
-    return await City.find({});
+    return await City.aggregate([
+        {
+            $lookup: {
+                from: 'users',
+                localField: '_id',
+                foreignField: 'city',
+                as: 'users'
+            }
+        }
+    ]);
 };
 
 const get = async id => {
-    const result = await City.aggregate([
+    const city = await City.findById(id);
+    if (city === null) {
+        throw new Error('City not found');
+    }
+    return await City.aggregate([
         {
             $match: {_id: ObjectId(id)}
         },
@@ -18,9 +31,7 @@ const get = async id => {
                 as: 'users'
             }
         }
-    ]);
-
-    return result
+    ])
 };
 
 const add = async body => {
@@ -29,11 +40,21 @@ const add = async body => {
 };
 
 const update = async (id, body) => {
-    return await City.findByIdAndUpdate(id, body, {runValidators: true});
+    const result = await City.findByIdAndUpdate(id, body, {new: true, runValidators: true});
+    if (result === null) {
+        throw new Error('City not found');
+    }
+
+    return result;
 };
 
 const remove = async id => {
-    return await City.findByIdAndDelete(id);
+    let result = await City.findByIdAndDelete(id);
+    if (result === null) {
+        throw new Error('City not found');
+    }
+
+    return result;
 };
 
 module.exports = {
