@@ -16,7 +16,13 @@ const updateScheme = Joi.object({
     city: Joi.string().trim()
 });
 
+const loginScheme = Joi.object({
+    login: Joi.string().trim().required(),
+    password: Joi.string().required()
+});
+
 module.exports = {
     createScheme,
-    updateScheme
+    updateScheme,
+    loginScheme
 };

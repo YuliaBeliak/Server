@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const {jwtSecret} = require('../../config/app');
+const {key} = require('../../config/app').jwt.access;
 
 const authorize = async (req, res, next) => {
     try {
@@ -8,7 +8,7 @@ const authorize = async (req, res, next) => {
             throw new Error('Token is not provided');
         }
         const token = authHeader.replace('Bearer', '').trim();
-        jwt.verify(token, jwtSecret);
+        await jwt.verify(token, key);
         next();
 
     } catch (e) {

@@ -13,6 +13,15 @@ class UserController {
         }
     };
 
+    getNewToken = async (req, res) => {
+        try {
+            const result = await service.getToken(req.body);
+            res.status(200).send(result);
+        } catch (e) {
+            res.status(400).send({error: e.message});
+        }
+    };
+
     getUsers = async (req, res) => {
         try {
             const result = await service.getAll();
@@ -20,16 +29,16 @@ class UserController {
         } catch (err) {
             res.status(400).send({error: err.message});
         }
-    }
+    };
 
     getUser = async (req, res) => {
         try {
             const result = await service.get(req.params.id);
             res.status(200).send(result);
         } catch (err) {
-            res.status(400).send({error: err.message});
+            res.status(404).send({error: err.message});
         }
-    }
+    };
 
     addUser = async (req, res) => {
         try {
@@ -38,7 +47,7 @@ class UserController {
         } catch (err) {
             res.status(400).send({error: err.message});
         }
-    }
+    };
 
     updateUser = async (req, res) => {
         try {
@@ -47,7 +56,7 @@ class UserController {
         } catch (err) {
             res.status(400).send({error: err.message});
         }
-    }
+    };
 
     removeUser = async (req, res) => {
         try {

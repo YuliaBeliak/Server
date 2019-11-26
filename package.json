@@ -15,7 +15,10 @@
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
     "mongodb": "^3.3.4",
-    "mongoose": "^5.7.10"
+    "mongoose": "^5.7.10",
+    "swagger": "^0.7.5",
+    "swagger-editor": "^3.7.1",
+    "swagger-ui-express": "^4.1.2"
   },
   "devDependencies": {
     "nodemon": "^1.19.4"
