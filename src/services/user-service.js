@@ -15,18 +15,25 @@ const login = async body => {
         throw new Error('Wrong password')
     }
 
-    const accessToken = await generateAccessToken(user._id);
-    const refreshToken = await user.generateRefreshToken();
+    const access = await generateAccessToken(user._id);
+    const refresh = await user.generateRefreshToken();
 
     return {
-        accessToken,
-        refreshToken
+        user: await get(user._id),
+        tokens: {
+            access,
+            refresh
+        }
     };
 };
 
 const generateAccessToken = async id => {
     try {
-        return await jwt.sign({_id: id}, access.key, {expiresIn: access.expiresIn});
+        const token = await jwt.sign({_id: id}, access.key, {expiresIn: access.expiresIn});
+        return {
+            token,
+            expiryDate: jwt.decode(token).exp
+        }
     } catch (e) {
         throw new Error({error: e.message});
     }
@@ -36,8 +43,7 @@ const getToken = async body => {
     const refreshToken = body.token;
     const payload = await jwt.verify(refreshToken, refresh.key);
     const {_id} = payload;
-    const accessToken = await generateAccessToken(_id);
-    return {accessToken};
+    return  await generateAccessToken(_id);
 };
 
 const getAll = async () => {
@@ -105,7 +111,7 @@ const update = async (id, body) => {
     if (result === null) {
         throw new Error('User not found');
     }
-    return result;
+    return (await get(result._id))[0]
 };
 
 const remove = async id => {

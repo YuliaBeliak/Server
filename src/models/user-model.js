@@ -37,7 +37,11 @@ const userScheme = new mongoose.Schema({
 userScheme.methods = {
     generateRefreshToken: function () {
         const user = this;
-        return jwt.sign({_id: user._id}, key, {expiresIn})
+        const token = jwt.sign({_id: user._id}, key, {expiresIn});
+        return {
+            token,
+            expiryDate: jwt.decode(token).exp
+        }
     }
 };
 
