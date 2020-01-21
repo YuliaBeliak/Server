@@ -19,7 +19,7 @@ const get = async id => {
     if (city === null) {
         throw new Error('City not found');
     }
-    return await City.aggregate([
+    const result = await City.aggregate([
         {
             $match: {_id: ObjectId(id)}
         },
@@ -31,7 +31,9 @@ const get = async id => {
                 as: 'users'
             }
         }
-    ])
+    ]);
+
+    return result[0];
 };
 
 const add = async body => {

@@ -73,7 +73,7 @@ const get = async id => {
     if (user === null) {
         throw new Error('User not found');
     }
-    return await User.aggregate([
+    const result = await User.aggregate([
         {
             $match: {_id: ObjectId(id)}
         },
@@ -95,6 +95,10 @@ const get = async id => {
             }
         }
     ]);
+
+    result[0].city = result[0].city.toString();
+
+    return result[0];
 };
 
 const add = async body => {
@@ -111,7 +115,7 @@ const update = async (id, body) => {
     if (result === null) {
         throw new Error('User not found');
     }
-    return (await get(result._id))[0]
+    return await get(result._id)
 };
 
 const remove = async id => {
