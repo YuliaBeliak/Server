@@ -64,6 +64,9 @@ const getAll = async () => {
                 password: '$password',
                 city: '$city.title'
             }
+        },
+        {
+            $unwind: "$city"
         }
     ]);
 };
@@ -93,11 +96,11 @@ const get = async id => {
                 password: '$password',
                 city: '$city.title'
             }
+        },
+        {
+            $unwind: "$city"
         }
     ]);
-
-    result[0].city = result[0].city.toString();
-
     return result[0];
 };
 
