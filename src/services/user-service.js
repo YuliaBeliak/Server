@@ -101,10 +101,12 @@ const get = async id => {
     return result[0];
 };
 
-const add = async body => {
+const addAndLogin = async body => {
+    const password = body.password;
     body.password = bCrypt.hashSync(body.password, 10);
     const user = new User(body);
-    return await user.save();
+    await user.save();
+    return await login({login: body.login, password})
 };
 
 const update = async (id, body) => {
@@ -129,7 +131,7 @@ const remove = async id => {
 module.exports = {
     getAll,
     get,
-    add,
+    addAndLogin,
     update,
     remove,
     login,
